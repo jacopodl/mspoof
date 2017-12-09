@@ -2,7 +2,7 @@
 Simple utility for Linux/Mac Os that can change mac address of network interface.
 
 # Getting and compiling the code
-:warning: mspoof required cmake to automate build process, please install cmake first!
+:warning: mspoof require cmake to automate build process, please install cmake first!
 
     $ git clone https://github.com/jacopodl/mspoof
     $ cd mspoof
