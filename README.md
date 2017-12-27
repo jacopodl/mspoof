@@ -1,5 +1,5 @@
 ![](https://img.shields.io/badge/Language-C-orange.svg)
-![](https://img.shields.io/badge/version-1.0.0-green.svg)
+![](https://img.shields.io/badge/version-1.0.1-green.svg)
 ![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![](https://img.shields.io/badge/Supported%20Os-Linux%2FBSD%2FMac%20Os-red.svg)
 

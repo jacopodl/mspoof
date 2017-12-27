@@ -1,6 +1,6 @@
 /*
     * mspoof
-	* Copyright (C) 2017 Jacopo De Luca
+	* Copyright (C) 2017 - 2018 Jacopo De Luca
 	*
 	* This program is free software: you can redistribute it and/or modify
 	* it under the terms of the GNU General Public License as published by
@@ -18,11 +18,12 @@
 #define MSPOOF
 
 #include <stdbool.h>
+#include <net/if.h>
 
 #define APPNAME "mspoof"
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 0
-#define VERSION_PATCH 0
+#define VERSION_PATCH 1
 
 typedef struct {
     bool shl;

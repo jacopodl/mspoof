@@ -1,6 +1,6 @@
 /*
     * mspoof
-	* Copyright (C) 2017 Jacopo De Luca
+	* Copyright (C) 2017 - 2018 Jacopo De Luca
 	*
 	* This program is free software: you can redistribute it and/or modify
 	* it under the terms of the GNU General Public License as published by
@@ -97,7 +97,6 @@ int main(int argc, char **argv) {
 }
 
 int set_iface_mac(Options *opt) {
-    short flags;
     netaddr_mac(burned);
 
     if (getuid()) {
@@ -105,9 +104,12 @@ int set_iface_mac(Options *opt) {
         return -1;
     }
 
-    if (opt->rmac)
+    if (opt->rmac) {
+        printf("Randomizing MAC address...\n");
         eth_rndaddr(&opt->iface_hwaddr);
-    else if (opt->rset) {
+        printf("Selected address: %s\n", eth_getstr(&opt->iface_hwaddr, true));
+    } else if (opt->rset) {
+        printf("Resetting device address...\n");
         if (netdev_burnedin_mac(opt->iface_name, &burned) != SPKERR_SUCCESS) {
             perror("netdev_burnedin_mac");
             return -1;
@@ -115,6 +117,7 @@ int set_iface_mac(Options *opt) {
         memcpy(&opt->iface_hwaddr, &burned, sizeof(struct netaddr_mac));
     }
 
+    printf("Setting new address...\n");
     if (netdev_set_mac(opt->iface_name, &opt->iface_hwaddr) != SPKERR_SUCCESS) {
         fprintf(stderr, "Unable to set MAC address!\n");
         perror("netdev_set_mac");
@@ -122,22 +125,16 @@ int set_iface_mac(Options *opt) {
     }
 
     if (opt->rstart) {
-        if (netdev_get_flags(opt->iface_name, &flags) != SPKERR_SUCCESS) {
-            fprintf(stderr, "Unable to get interface flags!\n");
-            perror("netdev_get_flags");
+        printf("Restarting device...\n");
+        if (netdev_set_active(opt->iface_name, false) != SPKERR_SUCCESS) {
+            fprintf(stderr, "Unable to set interface down!\n");
+            perror("netdev_set_active");
             return -1;
         }
-        flags &= ~IFF_UP;
-        if (netdev_set_flags(opt->iface_name, flags) != SPKERR_SUCCESS) {
-            fprintf(stderr, "Unable to set interface flags!\n");
-            perror("netdev_set_flags");
-            return -1;
-        }
-        sleep(2);
-        flags |= IFF_UP;
-        if (netdev_set_flags(opt->iface_name, flags) != SPKERR_SUCCESS) {
-            fprintf(stderr, "Unable to set interface flags!\n");
-            perror("netdev_set_flags");
+        sleep(1);
+        if (netdev_set_active(opt->iface_name, true) != SPKERR_SUCCESS) {
+            fprintf(stderr, "Unable to set interface up!\n");
+            perror("netdev_set_active");
             return -1;
         }
     }
